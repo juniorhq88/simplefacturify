@@ -17,10 +17,8 @@ export default function ReadingPane({ conversation }: ReadingPaneProps) {
   const handleSend = useCallback(async (): Promise<void> => {
     if (!conversation || !reply.trim()) return;
 
-    const msg = conversation.messages[0];
-
     try {
-      await send({ to: msg.email, subject: msg.subject, body: reply });
+      await send({ threadId: conversation.id, body: reply });
     } catch {
       // TODO: mostrar toast de error
     }
