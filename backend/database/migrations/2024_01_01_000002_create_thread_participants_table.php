@@ -8,21 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('threads', function (Blueprint $table) {
+        Schema::create('thread_participants', function (Blueprint $table) {
             $table->id();
-            $table->string('subject');
-            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
-            $table->timestamp('last_message_at')->nullable();
+            $table->foreignId('thread_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->timestamp('last_read_at')->nullable();
             $table->timestamps();
-            $table->softDeletes();
 
-            $table->index('last_message_at');
-            $table->index('created_by');
+            $table->unique(['thread_id', 'user_id']);
+            $table->index('user_id');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('threads');
+        Schema::dropIfExists('thread_participants');
     }
 };
