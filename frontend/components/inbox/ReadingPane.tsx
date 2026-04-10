@@ -8,11 +8,15 @@ import styles from "@/styles/inbox.styles";
 interface ReadingPaneProps {
   conversation: Conversation | null;
   onMessageSent?: (threadId: string, message: Message) => void;
+  isComposing?: boolean;
+  onComposeClose?: () => void;
 }
 
-export default function ReadingPane({ conversation, onMessageSent }: ReadingPaneProps) {
+export default function ReadingPane({ conversation, onMessageSent, isComposing, onComposeClose }: ReadingPaneProps) {
   const [reply, setReply] = useState("");
   const [sent, setSent] = useState(false);
+  const [to, setTo] = useState("");
+  const [subject, setSubject] = useState("");
   const { send } = useSendMessage();
 
   const handleSend = useCallback(async (): Promise<void> => {
@@ -42,6 +46,76 @@ export default function ReadingPane({ conversation, onMessageSent }: ReadingPane
   }, [conversation, reply, send, onMessageSent]);
 
   if (!conversation) {
+    if (isComposing) {
+      const handleNewSend = async (): Promise<void> => {
+        if (!to.trim() || !subject.trim() || !reply.trim()) return;
+        try {
+          await send({ to, subject, body: reply });
+        } catch {
+          // TODO: mostrar toast de error
+        }
+        setReply("");
+        setTo("");
+        setSubject("");
+        setSent(true);
+        if (onComposeClose) onComposeClose();
+        setTimeout(() => setSent(false), 3000);
+      };
+
+      return (
+        <div style={styles.readingPane}>
+          <div style={styles.composeHeader}>
+            <h2 style={styles.msgSubject}>Nuevo mensaje</h2>
+          </div>
+          <div style={styles.composeForm}>
+            <div style={styles.composeField}>
+              <label htmlFor="to-input" style={styles.label}>Para:</label>
+              <input
+                id="to-input"
+                style={styles.input}
+                type="email"
+                placeholder="destinatario@ejemplo.com"
+                value={to}
+                onChange={(e) => setTo(e.target.value)}
+              />
+            </div>
+            <div style={styles.composeField}>
+              <label htmlFor="subject-input" style={styles.label}>Asunto:</label>
+              <input
+                id="subject-input"
+                style={styles.input}
+                type="text"
+                placeholder="Asunto del mensaje"
+                value={subject}
+                onChange={(e) => setSubject(e.target.value)}
+              />
+            </div>
+            <div style={styles.composeField}>
+              <label htmlFor="compose-body" style={{ display: "none" }}>Mensaje</label>
+              <textarea
+                id="compose-body"
+                style={styles.replyTextarea}
+                placeholder="Escribir mensaje..."
+                value={reply}
+                onChange={(e) => setReply(e.target.value)}
+                rows={10}
+              />
+            </div>
+            <div style={styles.replyFooter}>
+              {sent && (
+                <span role="status" style={{ fontSize: 13, color: "#1D9E75" }}>
+                  ¡Enviado!
+                </span>
+              )}
+              <button style={styles.btnSend} onClick={handleNewSend} disabled={!to.trim() || !subject.trim() || !reply.trim()}>
+                Enviar
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div style={{ ...styles.readingPane, alignItems: "center", justifyContent: "center" }}>
         <p style={{ color: "#888" }}>Selecciona una conversación</p>

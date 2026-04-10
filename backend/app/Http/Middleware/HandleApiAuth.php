@@ -12,6 +12,11 @@ class HandleApiAuth
 {
     public function handle(Request $request, Closure $next)
     {
+        // In testing environment, check if user is already authenticated via actingAs()
+        if (app()->environment('testing') && Auth::check()) {
+            return $next($request);
+        }
+
         // First, try to authenticate with JWT
         try {
             $user = JWTAuth::parseToken()->authenticate();

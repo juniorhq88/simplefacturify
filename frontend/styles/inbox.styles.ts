@@ -168,6 +168,11 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: 600,
     cursor: "pointer",
   },
+  composeHeader: { padding: "16px 20px 12px", borderBottom: "1px solid #e5e5e5" },
+  composeForm: { padding: "16px 20px", display: "flex", flexDirection: "column", flex: 1, overflow: "auto" },
+  composeField: { marginBottom: 14 },
+  label: { display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 5 },
+  input: { width: "100%", border: "1px solid #ddd", borderRadius: 8, padding: "8px 12px", fontSize: 14, outline: "none", boxSizing: "border-box", color: "#1a1a1a", background: "#ffffff" },
   overlay: {
     position: "fixed",
     inset: 0,

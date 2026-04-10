@@ -13,6 +13,7 @@ export default function InboxPage() {
   const { token, login, logout } = useAuth();
   const [activeId, setActiveId] = useState("alice");
   const [search, setSearch] = useState("");
+  const [isComposing, setIsComposing] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>(CONVERSATIONS);
 
   const handleMessageSent = useCallback((threadId: string, message: Message) => {
@@ -57,7 +58,9 @@ export default function InboxPage() {
         />
 
         <div style={{ display: "flex", gap: 8, marginLeft: "auto" }}>
-          <button style={styles.btnOutline}>+ Nuevo mensaje</button>
+          <button style={styles.btnOutline} onClick={() => { setActiveId(""); setIsComposing(true); }}>
+            + Nuevo mensaje
+          </button>
           <button
             style={{ ...styles.btnOutline, color: "#c0392b" }}
             onClick={logout}
@@ -74,7 +77,12 @@ export default function InboxPage() {
           activeId={activeId}
           onSelect={setActiveId}
         />
-        <ReadingPane conversation={activeConversation} onMessageSent={handleMessageSent} />
+        <ReadingPane 
+          conversation={activeConversation} 
+          onMessageSent={handleMessageSent}
+          isComposing={isComposing}
+          onComposeClose={() => setIsComposing(false)}
+        />
       </main>
     </div>
   );
