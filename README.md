@@ -1,6 +1,6 @@
 # MiInbox — Backend (Laravel)
 
-API RESTful para el módulo de mensajería tipo inbox, construida con **Laravel** y autenticación via **Laravel Sanctum** (Bearer tokens).
+API RESTful para el módulo de mensajería tipo inbox, construida con **Laravel** y autenticación via **JWT** (JSON Web Tokens).
 
 ---
 
@@ -58,7 +58,8 @@ DB_DATABASE=miinbox
 DB_USERNAME=root
 DB_PASSWORD=
 
-SANCTUM_STATEFUL_DOMAINS=localhost:3000
+JWT_TTL=3600
+JWT_REFRESH_TTL=7200
 ```
 
 ---
@@ -68,7 +69,7 @@ SANCTUM_STATEFUL_DOMAINS=localhost:3000
 Todos los endpoints protegidos requieren el header:
 
 ```
-Authorization: Bearer {token}
+Authorization: Bearer {jwt_token}
 ```
 
 ### Autenticación
@@ -188,9 +189,9 @@ php artisan test --coverage
 
 ## Decisiones técnicas
 
-### Sanctum en lugar de tymon/jwt-auth
+### JWT en lugar de Laravel Sanctum
 
-La prueba menciona "JWT" pero en el ecosistema Laravel moderno **Sanctum** es el estándar idiomático para APIs SPA/mobile. Emite tokens opacos Bearer con la misma semántica que JWT para el consumidor de la API. Se eligió Sanctum para aprovechar la integración nativa de Laravel en lugar de añadir una dependencia externa.
+Se ha implementado autenticación con **JWT** en lugar de Sanctum para proporcionar tokens autocontenidos que incluyen claims verificables. JWT permite una validación más eficiente en sistemas distribuidos, reduce las consultas a la base de datos y facilita la implementación de SSO. La elección de JWT sigue explícitamente los requisitos de la prueba y ofrece mayor flexibilidad para futuras integraciones.
 
 ### SoftDeletes en Thread y Message
 
