@@ -25,7 +25,9 @@ class ThreadController extends Controller
             ->search($request->query('search'))
             ->with(['creator:id,name,email', 'latestMessage.sender:id,name'])
             ->withCount(['messages'])
+            ->orderByRaw('CASE WHEN last_message_at IS NULL THEN 0 ELSE 1 END')
             ->orderByDesc('last_message_at')
+            ->orderByDesc('created_at')
             ->paginate($request->integer('per_page', 15));
 
         return ThreadResource::collection($threads);
@@ -41,16 +43,11 @@ class ThreadController extends Controller
         $this->authorizeParticipant($request, $thread);
 
         // Mark notifications as read for this user
-        $thread->messages()
-            ->whereHas('notifications', fn ($q) => $q
-                ->where('user_id', $request->user()->id)
-                ->whereNull('read_at')
-            )
-            ->get()
-            ->each(fn ($msg) => $msg->notifications()
-                ->where('user_id', $request->user()->id)
-                ->update(['read_at' => now()])
-            );
+        InboxNotification::query()
+            ->where('user_id', $request->user()->id)
+            ->where('thread_id', $thread->id)
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
 
         // Update participant last_read_at
         $thread->participants()->updateExistingPivot($request->user()->id, [

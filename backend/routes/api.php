@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 
 // ─── Protected (JWT Bearer token) ───────────────────────────────────────────
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth.api'])->group(function () {
 
     // Auth
     Route::get('/user', [AuthController::class, 'me']);

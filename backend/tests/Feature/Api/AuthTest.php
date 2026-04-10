@@ -35,8 +35,8 @@ class AuthTest extends TestCase
         $this->postJson('/api/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
-        ])->assertUnprocessable()
-            ->assertJsonValidationErrors(['email']);
+        ])->assertStatus(401)
+            ->assertJson(['error' => 'invalid_credentials']);
     }
 
     public function test_login_requires_email_and_password(): void
@@ -69,6 +69,6 @@ class AuthTest extends TestCase
         $this->actingAs($user)
             ->postJson('/api/logout')
             ->assertOk()
-            ->assertJsonPath('message', 'Logged out successfully.');
+            ->assertJson(['message' => 'Logged out successfully.']);
     }
 }
