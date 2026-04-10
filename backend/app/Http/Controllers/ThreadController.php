@@ -23,7 +23,10 @@ class ThreadController extends Controller
         $threads = Thread::query()
             ->forUser($request->user()->id)
             ->search($request->query('search'))
-            ->with(['creator:id,name,email', 'latestMessage.sender:id,name'])
+            ->with(['creator:id,name'])
+            ->with(['latestMessage' => function ($query) {
+                $query->with('sender:id,name');
+            }])
             ->withCount(['messages'])
             ->orderByRaw('CASE WHEN last_message_at IS NULL THEN 0 ELSE 1 END')
             ->orderByDesc('last_message_at')
@@ -54,7 +57,10 @@ class ThreadController extends Controller
             'last_read_at' => now(),
         ]);
 
-        $thread->load(['creator:id,name,email', 'participants:id,name,email', 'messages.sender:id,name,email']);
+        $thread->load(['creator:id,name', 'participants:id,name']);
+        $thread->load(['messages' => function ($query) {
+            $query->with('sender:id,name');
+        }]);
 
         return response()->json([
             'data' => new ThreadResource($thread),
@@ -87,7 +93,10 @@ class ThreadController extends Controller
         // Notify other participants
         $this->dispatchNotifications($thread, $message, $request->user()->id);
 
-        $thread->load(['creator:id,name,email', 'participants:id,name,email', 'messages.sender:id,name,email']);
+        $thread->load(['creator:id,name', 'participants:id,name']);
+        $thread->load(['messages' => function ($query) {
+            $query->with('sender:id,name');
+        }]);
 
         return response()->json(['data' => new ThreadResource($thread)], 201);
     }

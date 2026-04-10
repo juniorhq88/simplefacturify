@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Thread extends Model
@@ -42,9 +43,9 @@ class Thread extends Model
         return $this->hasMany(Message::class)->orderBy('created_at');
     }
 
-    public function latestMessage(): HasMany
+    public function latestMessage(): HasOne
     {
-        return $this->hasMany(Message::class)->latestOfMany();
+        return $this->hasOne(Message::class)->latestOfMany();
     }
 
     // ─── Scopes ──────────────────────────────────────────────────────────────

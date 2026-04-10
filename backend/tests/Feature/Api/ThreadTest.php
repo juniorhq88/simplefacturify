@@ -19,12 +19,16 @@ class ThreadTest extends TestCase
         $user = User::factory()->create();
         $other = User::factory()->create();
 
-        // Thread where user participates
-        $myThread = Thread::factory()->create(['created_by' => $user->id]);
+        $myThread = Thread::factory()->create([
+            'created_by' => $user->id,
+            'last_message_at' => now()->subDay(),
+        ]);
         $myThread->participants()->attach($user->id);
 
-        // Thread where user does NOT participate
-        $otherThread = Thread::factory()->create(['created_by' => $other->id]);
+        $otherThread = Thread::factory()->create([
+            'created_by' => $other->id,
+            'last_message_at' => now(),
+        ]);
         $otherThread->participants()->attach($other->id);
 
         $response = $this->actingAs($user)->getJson('/api/threads');
@@ -38,10 +42,18 @@ class ThreadTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $match = Thread::factory()->create(['subject' => 'Invoice question', 'created_by' => $user->id]);
+        $match = Thread::factory()->create([
+            'subject' => 'Invoice question',
+            'created_by' => $user->id,
+            'last_message_at' => now()->subDay(),
+        ]);
         $match->participants()->attach($user->id);
 
-        $noMatch = Thread::factory()->create(['subject' => 'Unrelated topic', 'created_by' => $user->id]);
+        $noMatch = Thread::factory()->create([
+            'subject' => 'Unrelated topic',
+            'created_by' => $user->id,
+            'last_message_at' => now(),
+        ]);
         $noMatch->participants()->attach($user->id);
 
         $this->actingAs($user)
