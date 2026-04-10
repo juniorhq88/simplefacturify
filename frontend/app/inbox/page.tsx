@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { CONVERSATIONS } from "@/constants/inbox";
+import { Conversation, Message } from "@/types/inbox";
 import LoginModal from "@/components/inbox/LoginModal";
 import Sidebar from "@/components/inbox/Sidebar";
 import ReadingPane from "@/components/inbox/ReadingPane";
@@ -12,8 +13,19 @@ export default function InboxPage() {
   const { token, login, logout } = useAuth();
   const [activeId, setActiveId] = useState("alice");
   const [search, setSearch] = useState("");
+  const [conversations, setConversations] = useState<Conversation[]>(CONVERSATIONS);
 
-  const filtered = CONVERSATIONS.filter(
+  const handleMessageSent = useCallback((threadId: string, message: Message) => {
+    setConversations((prev) =>
+      prev.map((c) =>
+        c.id === threadId
+          ? { ...c, messages: [message, ...c.messages] }
+          : c
+      )
+    );
+  }, []);
+
+  const filtered = conversations.filter(
     (c) =>
       c.name.toLowerCase().includes(search.toLowerCase()) ||
       c.preview.toLowerCase().includes(search.toLowerCase())
@@ -62,7 +74,7 @@ export default function InboxPage() {
           activeId={activeId}
           onSelect={setActiveId}
         />
-        <ReadingPane conversation={activeConversation} />
+        <ReadingPane conversation={activeConversation} onMessageSent={handleMessageSent} />
       </main>
     </div>
   );

@@ -1,15 +1,16 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Conversation } from "@/types/inbox";
+import { Conversation, Message } from "@/types/inbox";
 import { useSendMessage } from "@/hooks/useSendMessage";
 import styles from "@/styles/inbox.styles";
 
 interface ReadingPaneProps {
   conversation: Conversation | null;
+  onMessageSent?: (threadId: string, message: Message) => void;
 }
 
-export default function ReadingPane({ conversation }: ReadingPaneProps) {
+export default function ReadingPane({ conversation, onMessageSent }: ReadingPaneProps) {
   const [reply, setReply] = useState("");
   const [sent, setSent] = useState(false);
   const { send } = useSendMessage();
@@ -19,6 +20,18 @@ export default function ReadingPane({ conversation }: ReadingPaneProps) {
 
     try {
       await send({ threadId: conversation.id, body: reply });
+      
+      if (onMessageSent) {
+        const newMessage: Message = {
+          id: Date.now(),
+          subject: conversation.messages[0]?.subject || "Re: " + conversation.name,
+          from: "Tú",
+          email: "",
+          time: "Ahora",
+          body: reply,
+        };
+        onMessageSent(conversation.id, newMessage);
+      }
     } catch {
       // TODO: mostrar toast de error
     }
@@ -26,7 +39,7 @@ export default function ReadingPane({ conversation }: ReadingPaneProps) {
     setReply("");
     setSent(true);
     setTimeout(() => setSent(false), 3000);
-  }, [conversation, reply, send]);
+  }, [conversation, reply, send, onMessageSent]);
 
   if (!conversation) {
     return (

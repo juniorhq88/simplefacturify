@@ -27,7 +27,7 @@ Route::middleware(['auth.api'])->group(function () {
     Route::post('/threads', [ThreadController::class, 'store']);
     Route::get('/threads/{thread}', [ThreadController::class, 'show']);
 
-    // Messages (replies)
+    // Messages (replies) - supports numeric ID or string identifier (email/name)
     Route::post('/threads/{thread}/messages', [MessageController::class, 'store']);
 
     // Notifications (bonus)
