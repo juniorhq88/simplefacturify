@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend — simpleFacturify
 
-## Getting Started
+Interfaz de usuario del sistema de facturación, construida con **Next.js 16**, **React 19** y **Tailwind CSS 4**.
 
-First, run the development server:
+Una aplicación moderna, rápida y responsive para gestionar tus facturas desde cualquier dispositivo.
+
+---
+
+## Requisitos
+
+| Herramienta    | Versión mínima   |
+| -------------- | ---------------- |
+| Node.js        | 18.x             |
+| npm            | 10.x             |
+
+---
+
+## Instalación rápida
 
 ```bash
+# Instalar dependencias
+npm install
+
+# Arrancar desarrollo
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Accede a: **http://localhost:3000**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts disponibles
 
-## Learn More
+| Comando       | Descripción                    |
+| -------------- | ------------------------------ |
+| npm run dev    | Servidor de desarrollo          |
+| npm run build  | Build de producción             |
+| npm run start  | Servidor de producción          |
+| npm run lint   | Verificar código              |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Configuración
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+El frontend se conecta al backend en `http://localhost:8000`. Si necesitas cambiar esta URL, edita el archivo de configuración de API en `app/`.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Estructura del proyecto
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+frontend/
+├── app/              # Páginas y rutas (App Router)
+├── components/       # Componentes reutilizables
+├── styles/           # Estilos globales
+└── public/           # Assets estáticos
+```
+
+---
+
+## Ayuda
+
+¿Necesitas ayuda con Next.js? Revisa la documentación oficial: https://nextjs.org/docs

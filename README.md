@@ -1,4 +1,4 @@
-# MiInbox — Backend (Laravel)
+# simpleFacturify — Backend (Laravel)
 
 API RESTful para el módulo de mensajería tipo inbox, construida con **Laravel** y autenticación via **JWT** (JSON Web Tokens).
 
@@ -224,6 +224,69 @@ Este proyecto fue desarrollado con apoyo de **Claude (Anthropic)** como herramie
 - **Resources**: El patrón `whenLoaded`/`whenCounted` fue sugerido por la IA y se adoptó tal cual por ser la práctica idiomática de Laravel.
 
 Todo el código fue revisado, entendido y ajustado línea por línea antes de incluirlo.
+
+---
+
+## Frontend (Next.js)
+
+Interfaz de usuario moderna construida con **Next.js 16**, **React 19** y **Tailwind CSS 4**.
+
+### Requisitos
+
+| Herramienta    | Versión mínima   |
+| -------------- | ---------------- |
+| Node.js        | 18.x             |
+| npm            | 10.x             |
+
+### Instalación y arranque
+
+```bash
+# 1. Entrar a la carpeta
+cd frontend
+
+# 2. Instalar dependencias
+npm install
+
+# 3. Levantar servidor de desarrollo
+npm run dev
+# → http://localhost:3000
+```
+
+### Configuración
+
+El frontend se conecta al backend en `http://localhost:8000`. Si necesitas cambiar la URL:
+
+Edita el archivo `app/api/[...]/route.ts` o donde esté la configuración de API.
+
+### Scripts disponibles
+
+| Comando       | Descripción                    |
+| -------------- | ------------------------------ |
+| npm run dev    | Servidor de desarrollo         |
+| npm run build  | Build de producción            |
+| npm run start  | Servidor de producción         |
+| npm run lint   | Verificar código               |
+
+---
+
+## Arquitectura del proyecto
+
+```
+simpleFacturify/
+├── backend/          # API Laravel (puerto 8000)
+│   ├── app/
+│   ├── routes/
+│   └── database/
+└── frontend/        # App Next.js (puerto 3000)
+    ├── app/
+    └── components/
+```
+
+### Flujo typical
+
+1. El usuario abre `http://localhost:3000` en su navegador
+2. El frontend comunica con el backend via API REST
+3. El backend procesa las peticiones y responde en JSON
 
 ---
 
